@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jean Piaget and Learning Technology</title>
+<meta name="description" content="An introduction to Jean Piaget's theory of cognitive development, and what it means for designing educational technology.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2313221E'/%3E%3Crect x='4' y='19' width='5' height='9' fill='%23C8A45C'/%3E%3Crect x='11' y='14' width='5' height='14' fill='%238E3B35'/%3E%3Crect x='18' y='9' width='5' height='19' fill='%232F6F6A'/%3E%3Crect x='25' y='4' width='4' height='24' fill='%23E7DFCB'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#13221E; --bg2:#182A25; --side:#0F1B18; --panel:#1D312B; --rule:#33493F;
+  --text:#E7DFCB; --muted:#A9B3A5; --brass:#C8A45C; --brass-hi:#DDBD79; --brass-dim:rgba(200,164,92,.35);
+  --claret:#8E3B35; --teal:#2F6F6A; --bone:#E7DFCB; --ink:#13221E;
+  --amber:#D9A03A; --amber-edge:#A9741B;
+  --good:#5FA39B; --bad:#D07A6E;
+  --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --railw:248px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:1rem}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:1.125rem;line-height:1.72;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.08;margin:0;color:var(--bone)}
+p{margin:0 0 1.1rem}
+a{color:var(--brass)}
+:focus-visible{outline:3px solid var(--brass-hi);outline-offset:3px}
+button{font:inherit;color:inherit}
+main{margin-left:var(--railw)}
+.wrap{width:min(100% - 3rem,900px);margin-inline:auto}
+.prose p,.prose ul{max-width:38rem}
+.prose ul{padding-left:1.2rem;margin:0 0 1.1rem}
+.prose li{margin-bottom:.4rem}
+.small{font-size:.95rem;color:var(--muted)}
+
+/* ---------- Side navigation ---------- */
+.rail{position:fixed;left:0;top:0;bottom:0;width:var(--railw);background:var(--side);border-right:1px solid var(--brass-dim);padding:1.9rem 1.6rem;display:flex;flex-direction:column;gap:1.4rem;z-index:20;overflow-y:auto}
+.mark{display:flex;align-items:flex-end;gap:3px;height:34px;text-decoration:none}
+.mark span{display:block;width:9px}
+.mark span:nth-child(1){height:11px;background:var(--brass)}
+.mark span:nth-child(2){height:18px;background:var(--claret)}
+.mark span:nth-child(3){height:26px;background:var(--teal)}
+.mark span:nth-child(4){height:34px;background:var(--bone)}
+.rail-title{font-family:var(--display);font-weight:700;font-size:1.6rem;line-height:1.1;margin:0;color:var(--bone)}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.1rem}
+.rail ol a{display:grid;grid-template-columns:2rem 1fr;align-items:baseline;gap:.5rem;padding:.4rem 0;text-decoration:none;color:var(--muted);font-family:var(--display);font-weight:600;font-size:1.2rem;line-height:1.2}
+.rail ol i{font-style:italic;font-weight:500;color:var(--muted)}
+.rail ol a.seen,.rail ol a.seen i{color:var(--text)}
+.rail ol a.active,.rail ol a.active i{color:var(--brass)}
+.rail ol a:hover,.rail ol a:hover i{color:var(--brass-hi)}
+.progress{display:none}
+
+/* ---------- Hero ---------- */
+.hero{background:radial-gradient(ellipse 70% 85% at 78% 40%,#264A40 0%,rgba(19,34,30,0) 72%),var(--bg);padding:5.5rem 0 5rem;border-bottom:1px solid var(--brass-dim)}
+.hero .wrap{width:min(100% - 3rem,1060px)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:3rem;align-items:center}
+.hero h1{font-size:clamp(3.4rem,8vw,7rem);line-height:.94;margin-bottom:1.6rem;letter-spacing:-.01em}
+.lede{font-size:1.2rem;max-width:34rem;color:#D4CDBA}
+.meta{font-size:1rem;color:var(--muted);margin-bottom:1.7rem}
+.epi{margin:2.4rem 0 0;padding-left:1.2rem;border-left:2px solid var(--brass)}
+.epi p{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.85rem;line-height:1.2;color:var(--bone);margin:0 0 .3rem}
+.epi footer{font-size:.92rem;color:var(--muted)}
+.btn,.btn.dark{display:inline-block;font-family:var(--display);font-weight:700;font-size:1.2rem;background:var(--brass);color:var(--ink);border:0;padding:.65rem 1.5rem;text-decoration:none;cursor:pointer;line-height:1.2}
+.btn:hover,.btn.dark:hover{background:var(--brass-hi)}
+.btn.line{background:transparent;color:var(--bone);box-shadow:inset 0 0 0 1px var(--brass)}
+.btn.line:hover{background:rgba(200,164,92,.14)}
+.btn:disabled{opacity:.5;cursor:default}
+.hero-art{margin:0}
+.hsteps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;align-items:end;max-width:380px;margin-left:auto}
+.hs{display:flex;flex-direction:column;justify-content:space-between;padding:.8rem .6rem;color:var(--ink)}
+.hs b{font-family:var(--display);font-weight:700;font-size:1.05rem;line-height:1;writing-mode:vertical-rl;transform:rotate(180deg);align-self:flex-start}
+.hs span{font-family:var(--display);font-weight:700;font-size:1.5rem;line-height:1}
+.hs:nth-child(1){height:180px;background:var(--brass)}
+.hs:nth-child(2){height:225px;background:var(--claret);color:var(--bone)}
+.hs:nth-child(3){height:270px;background:var(--teal);color:var(--bone)}
+.hs:nth-child(4){height:315px;background:var(--bone)}
+.js .hs{clip-path:inset(100% 0 0 0);transition:clip-path 1s cubic-bezier(.3,.1,.2,1)}
+.js .hsteps.built .hs{clip-path:inset(0)}
+.js .hsteps.built .hs:nth-child(2){transition-delay:.25s}
+.js .hsteps.built .hs:nth-child(3){transition-delay:.5s}
+.js .hsteps.built .hs:nth-child(4){transition-delay:.75s}
+.hero-art figcaption{font-size:.95rem;color:var(--muted);line-height:1.4;margin:1rem 0 0 auto;max-width:380px}
+
+/* ---------- Glasses ---------- */
+.glasses{display:flex;align-items:flex-end;justify-content:center;gap:1.25rem;min-height:250px}
+.gl{margin:0;display:flex;flex-direction:column;align-items:center;gap:.45rem}
+.glass{position:relative;border:2px solid var(--bone);border-top:0;border-radius:0 0 14px 14px;background:rgba(231,223,203,.07);overflow:hidden}
+.glass.wide{width:88px;height:130px}
+.glass.tall{width:46px;height:230px}
+.water{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--amber);box-shadow:inset 0 3px 0 var(--amber-edge);transition:height 2s cubic-bezier(.45,.05,.4,1)}
+.gl figcaption{font-family:var(--display);font-weight:600;font-size:1.15rem;color:var(--bone)}
+
+/* ---------- Sections ---------- */
+.sec{padding:5.5rem 0;background:var(--bg)}
+.sec.alt{background:var(--bg2)}
+.sec-head{margin-bottom:1.8rem}
+.sec-head::before{content:"";display:block;width:56px;height:2px;background:var(--brass);margin-bottom:1.1rem}
+.sec-head h2{font-size:clamp(2.6rem,5.4vw,4.1rem)}
+h3{font-size:2rem;margin:2.6rem 0 .8rem}
+
+/* ---------- Panels, options ---------- */
+.panel{position:relative;background:var(--panel);border:1px solid var(--brass);padding:1.8rem 2rem}
+.panel::before{content:"";position:absolute;inset:6px;border:1px solid var(--brass-dim);pointer-events:none}
+.step{font-family:var(--display);font-style:italic;font-size:1.15rem;color:var(--brass);margin:0 0 .4rem}
+.panel h4{font-size:1.75rem;margin-bottom:.6rem}
+.opts{display:grid;gap:.6rem;margin:1.1rem 0}
+.opt{text-align:left;background:transparent;border:1px solid #6F8176;padding:.7rem 1rem;cursor:pointer;color:var(--text);line-height:1.4;position:relative;z-index:1}
+.opt:hover:not(:disabled){background:rgba(200,164,92,.12);border-color:var(--brass)}
+.opt:disabled{cursor:default;color:var(--text);opacity:1}
+.opt.is-right{background:rgba(95,163,155,.2);border-color:var(--good)}
+.opt.is-wrong{background:rgba(208,122,110,.18);border-color:var(--bad)}
+.fb{margin:1rem 0 0}
+.fb b{color:var(--brass)}
+.btns{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.1rem;position:relative;z-index:1}
+.reasons{padding-left:1.2rem;margin:.4rem 0 1rem}
+.reasons li{margin-bottom:.35rem}
+
+/* ---------- Lab ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,310px) minmax(0,1fr);gap:2rem;margin-top:2.25rem;align-items:start}
+.lab-visual{background:var(--bg2);border:1px solid var(--rule);padding:2rem 1rem 1.5rem}
+
+/* ---------- Core ideas ---------- */
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:2.2rem 2.5rem;margin:2.2rem 0}
+.defs>div{border-top:1px solid var(--brass);padding-top:.9rem}
+.defs dt{font-family:var(--display);font-weight:700;font-size:1.9rem;line-height:1.1;margin-bottom:.3rem;color:var(--bone)}
+.defs dd{margin:0}
+.loop{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:2.5rem;align-items:center;margin:2.5rem 0}
+.loop svg{width:100%;height:auto;display:block}
+.loop text{font-family:var(--display);font-weight:600;font-size:15px;fill:var(--bone)}
+.loop .sub{font-family:var(--body);font-weight:400;font-size:10.5px;fill:var(--muted)}
+.loop .dk{fill:var(--ink)}
+.loop .arr{fill:none;stroke:var(--brass);stroke-width:2;marker-end:url(#ah)}
+.loop .bx{fill:var(--panel);stroke:var(--brass);stroke-width:1.5}
+.loop .bx.hl{fill:var(--brass)}
+.takeaway{border-left:3px solid var(--brass);background:rgba(200,164,92,.09);padding:1.3rem 1.7rem;margin:2.4rem 0}
+.takeaway h4{font-size:1.5rem;margin-bottom:.2rem;color:var(--brass)}
+.takeaway p{margin:0;max-width:40rem}
+
+/* ---------- Stages ---------- */
+.stairs{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;align-items:end;margin-top:2rem}
+.stair{border:0;cursor:pointer;text-align:left;padding:.9rem 1rem;display:flex;flex-direction:column;justify-content:flex-end;gap:.1rem;transition:transform .2s,box-shadow .2s;line-height:1.2}
+.stair b{font-family:var(--display);font-weight:700;font-size:1.4rem;line-height:1.05}
+.stair span{font-size:.92rem}
+.stair[data-i="0"]{height:92px;background:var(--brass);color:var(--ink)}
+.stair[data-i="1"]{height:122px;background:var(--claret);color:var(--bone)}
+.stair[data-i="2"]{height:152px;background:var(--teal);color:var(--bone)}
+.stair[data-i="3"]{height:182px;background:var(--bone);color:var(--ink)}
+.stair[aria-selected="true"]{transform:translateY(-8px);box-shadow:0 8px 0 var(--bone)}
+.stair[data-i="3"][aria-selected="true"]{box-shadow:0 8px 0 var(--brass)}
+.stage-detail{--c:var(--brass);margin-top:1.6rem;border-top:6px solid var(--c);background:var(--panel);padding:1.9rem 2rem 1.6rem;display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:2rem}
+.stage-detail .age{font-family:var(--display);font-weight:700;font-size:4rem;line-height:.95;color:var(--bone)}
+.stage-detail .nm{font-family:var(--display);font-style:italic;font-weight:500;font-size:1.4rem;margin-top:.4rem;color:var(--muted)}
+.stage-detail h4{font-size:1.3rem;margin:1.1rem 0 .2rem;color:var(--brass)}
+.stage-detail h4:first-child{margin-top:0}
+.stage-detail ul{margin:0;padding-left:1.15rem}
+.stage-detail li{margin-bottom:.25rem}
+.stage-detail p{margin:0}
+
+/* ---------- Lineage, tabs, principles ---------- */
+.line{list-style:none;margin:2.8rem 0 2rem;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:1.2rem;border-top:1px solid var(--brass)}
+.line li{position:relative;padding-top:1.2rem;font-size:.98rem;line-height:1.45;color:var(--muted)}
+.line li::before{content:"";position:absolute;top:-7px;left:1px;width:12px;height:12px;background:var(--brass);transform:rotate(45deg)}
+.line b{display:block;font-family:var(--display);font-weight:700;font-size:1.7rem;line-height:1.1;color:var(--bone);margin-bottom:.15rem}
+.tabs{display:flex;flex-wrap:wrap;gap:0 1.9rem;border-bottom:1px solid var(--brass-dim);margin-top:1.4rem}
+.tab{background:none;border:0;cursor:pointer;font-family:var(--display);font-weight:700;font-size:1.45rem;padding:.5rem 0;margin-bottom:-1px;border-bottom:3px solid transparent;color:var(--muted)}
+.tab:hover{color:var(--bone)}
+.tab[aria-selected="true"]{color:var(--bone);border-bottom-color:var(--brass)}
+.case{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem 2.5rem;padding-top:1.6rem}
+.case h4{font-size:1.3rem;margin-bottom:.2rem;color:var(--brass)}
+.case ul{margin:0 0 1rem;padding-left:1.15rem}
+.case li{margin-bottom:.3rem}
+.case p{margin:0 0 1rem}
+.principles{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem 2.5rem;margin:1.8rem 0 0;padding:0;list-style:none}
+.principles li{border-top:1px solid var(--brass);padding-top:.8rem}
+.principles b{display:block;font-family:var(--display);font-weight:700;font-size:1.5rem;line-height:1.15;margin-bottom:.25rem;color:var(--bone)}
+
+/* ---------- Critique ---------- */
+details{border-top:1px solid var(--brass-dim);padding:.2rem 0}
+details:last-of-type{border-bottom:1px solid var(--brass-dim)}
+summary{cursor:pointer;list-style:none;font-family:var(--display);font-weight:700;font-size:1.55rem;line-height:1.2;padding:.85rem 2.2rem .85rem 0;position:relative;color:var(--bone)}
+summary:hover{color:var(--brass-hi)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:.2rem;top:.6rem;font-size:1.9rem;font-weight:500;color:var(--brass)}
+details[open] summary::after{content:"\2212"}
+details .body{padding:0 0 1.2rem;max-width:40rem}
+details .body p:last-child{margin-bottom:0}
+.tablewrap{overflow-x:auto;margin:1.6rem 0 0}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:1rem;line-height:1.5}
+th{color:var(--brass);font-family:var(--display);font-weight:700;font-size:1.3rem;text-align:left;padding:.6rem 1rem;border-bottom:2px solid var(--brass)}
+td{padding:.8rem 1rem;vertical-align:top;border-bottom:1px solid var(--rule)}
+td:first-child{font-family:var(--display);font-weight:700;font-size:1.2rem;width:22%;color:var(--bone)}
+.toggle{display:flex;flex-wrap:wrap;gap:.6rem;margin:1.2rem 0}
+.tg{background:transparent;border:1px solid var(--brass);padding:.45rem 1.1rem;cursor:pointer;font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--bone)}
+.tg:hover{background:rgba(200,164,92,.14)}
+.tg[aria-pressed="true"]{background:var(--brass);color:var(--ink)}
+.tg-out{background:var(--panel);border-left:3px solid var(--brass);padding:1.1rem 1.4rem;max-width:42rem;min-height:5.5rem}
+
+/* ---------- Quiz, reflection ---------- */
+.quiz{max-width:42rem}
+.score{font-family:var(--display);font-weight:700;font-size:4rem;line-height:1;color:var(--brass);margin:.2rem 0 .6rem}
+textarea{width:100%;max-width:42rem;min-height:130px;font:inherit;line-height:1.55;padding:.9rem 1rem;border:1px solid var(--brass-dim);background:var(--panel);color:var(--text);resize:vertical}
+textarea::placeholder{color:#8A9A8E}
+label.lbl{display:block;font-family:var(--display);font-weight:700;font-size:1.4rem;margin:1.2rem 0 .4rem;color:var(--bone)}
+
+/* ---------- Footer ---------- */
+.foot{background:var(--side);border-top:1px solid var(--brass-dim);color:var(--muted);padding:4rem 0 3rem;margin-left:var(--railw);font-size:1rem}
+.foot h2{font-size:2.4rem;margin-bottom:1rem}
+.foot h3{font-size:1.7rem;margin:2.2rem 0 .6rem}
+.refs{list-style:none;padding:0;margin:0;max-width:44rem}
+.refs li{padding-left:1.6rem;text-indent:-1.6rem;margin-bottom:.6rem;line-height:1.5}
+.foot p{max-width:42rem}
+
+/* ---------- Smaller screens ---------- */
+@media (max-width:1100px){
+  main,.foot{margin-left:0}
+  html{scroll-padding-top:4.5rem}
+  .rail{position:sticky;top:0;bottom:auto;width:auto;flex-direction:row;align-items:center;gap:1rem;padding:.55rem 1rem;border-right:0;border-bottom:1px solid var(--brass-dim);overflow-x:auto;overflow-y:hidden}
+  .rail-title{display:none}
+  .rail nav{flex:1;min-width:0}
+  .rail ol{flex-direction:row;gap:1.1rem}
+  .rail ol a{white-space:nowrap;padding:.3rem 0;font-size:1.1rem;grid-template-columns:auto 1fr;gap:.35rem}
+  .progress{display:block;position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--brass)}
+}
+@media (max-width:820px){
+  .hero{padding:3.5rem 0}
+  .hero-grid,.lab,.loop,.stage-detail,.case,.defs,.principles{grid-template-columns:1fr}
+  .hsteps,.hero-art figcaption{margin-left:0}
+  .hero-art{margin-top:1rem}
+  .sec{padding:3.5rem 0}
+  .stairs{gap:.35rem}
+  .stair{padding:.6rem .55rem}
+  .stair b{font-size:1.1rem}
+  .stair span{font-size:.8rem}
+  .stage-detail{padding:1.4rem 1.2rem}
+  .panel{padding:1.4rem 1.2rem}
+  .line{grid-template-columns:1fr;border-top:0;border-left:1px solid var(--brass);padding-left:1.7rem;gap:1.4rem}
+  .line li{padding-top:0}
+  .line li::before{top:.55rem;left:calc(-1.7rem - 6px)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .water,.stair,.js .hs{transition:none}
+}
+</style>
+</head>
+<body>
+
+<aside class="rail" aria-label="Site navigation">
+  <a class="mark" href="#top" aria-label="Back to the start"><span></span><span></span><span></span><span></span></a>
+  <p class="rail-title">Piaget and learning technology</p>
+  <nav aria-label="Sections">
+    <ol>
+      <li><a href="#puzzle"><i>I</i>The puzzle</a></li>
+      <li><a href="#ideas"><i>II</i>Four ideas</a></li>
+      <li><a href="#stages"><i>III</i>Four stages</a></li>
+      <li><a href="#edtech"><i>IV</i>In practice</a></li>
+      <li><a href="#critique"><i>V</i>Limits</a></li>
+      <li><a href="#check"><i>VI</i>Check yourself</a></li>
+    </ol>
+  </nav>
+  <div class="progress" aria-hidden="true"></div>
+</aside>
+
+<main>
+<noscript><p style="padding:1rem 1.5rem;background:#3A2A1E;margin:0">This site uses JavaScript for its interactive parts. The text still reads fine without it, but the puzzle, explorer and quiz need it switched on.</p></noscript>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>Jean Piaget and Learning Technology</h1>
+      <p class="lede">This site introduces Jean Piaget's theory of cognitive development to fellow students of educational technology. It begins with one of his best-known experiments, moves through his central concepts and four stages of thinking, and then considers what his ideas might imply for the design of learning technologies, and where they fall short.</p>
+      <p class="meta">Read in order, or jump around using the list on the left.</p>
+      <a class="btn" href="#puzzle">Begin with a puzzle</a>
+      <blockquote class="epi">
+        <p>To understand is to invent.</p>
+        <footer>Jean Piaget, title of his 1973 book</footer>
+      </blockquote>
+    </div>
+    <figure class="hero-art" aria-label="Piaget's four stages of cognitive development, shown as ascending steps">
+      <div class="hsteps" id="heroSteps">
+        <div class="hs"><b>Sensorimotor</b><span>0–2</span></div>
+        <div class="hs"><b>Preoperational</b><span>2–7</span></div>
+        <div class="hs"><b>Concrete operational</b><span>7–11</span></div>
+        <div class="hs"><b>Formal operational</b><span>12+</span></div>
+      </div>
+      <figcaption>Piaget's four stages of cognitive development, with approximate ages in years.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<!-- ============ I. PUZZLE ============ -->
+<section class="sec" id="puzzle">
+  <div class="wrap">
+    <div class="sec-head"><h2>The puzzle</h2></div>
+    <div class="prose">
+      <p>Piaget's conservation task is a convenient place to begin. It belongs to a widely replicated class of findings in developmental psychology, and it shows quickly why he came to think that children's reasoning differs in kind from that of adults. Two glasses hold the same amount of juice, and one is poured into a taller, thinner glass. Because nothing has been added or taken away, an adult sees no reason to doubt that the amount remains the same, yet a younger child frequently does. Run the task below and, before the result appears, try to predict how the child will respond.</p>
+    </div>
+    <div class="lab">
+      <div class="lab-visual" aria-hidden="true">
+        <div class="glasses">
+          <figure class="gl"><div class="glass wide"><div class="water" id="wA"></div></div><figcaption>A</figcaption></figure>
+          <figure class="gl"><div class="glass wide"><div class="water" id="wB"></div></div><figcaption>B</figcaption></figure>
+          <figure class="gl"><div class="glass tall"><div class="water" id="wC"></div></div><figcaption>C</figcaption></figure>
+        </div>
+      </div>
+      <div class="panel" id="labPanel" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ II. IDEAS ============ -->
+<section class="sec alt" id="ideas">
+  <div class="wrap">
+    <div class="sec-head"><h2>Four ideas to hold onto</h2></div>
+    <div class="prose">
+      <p>Piaget (1952) treated children as active participants in their own development. On this view, understanding is constructed through acting on the world, testing it, and revising what one believes about it. Four terms are central to the account.</p>
+    </div>
+    <dl class="defs">
+      <div><dt>Schema</dt><dd>A mental framework for organizing what one knows about something. An infant's grasping schema, for example, may become a toddler's "bird" schema, and later an adult's concept of an ecosystem.</dd></div>
+      <div><dt>Assimilation</dt><dd>Taking in new experience through an existing schema. A child who knows "dog" meets an unfamiliar breed and files it under the same category, leaving the schema as it was.</dd></div>
+      <div><dt>Accommodation</dt><dd>Changing a schema because an experience does not fit it. The same child meets a goat, is told that it is not a dog, and has to build a new category.</dd></div>
+      <div><dt>Equilibration</dt><dd>The process of balancing assimilation and accommodation that, for Piaget, drives development. A mismatch between experience and understanding produces discomfort, adaptation resolves it, and the resulting balance is more capable than the one before.</dd></div>
+    </dl>
+
+    <div class="loop">
+      <svg viewBox="0 0 440 300" role="img" aria-label="Cycle: equilibrium, new experience, disequilibrium, adaptation, then back to a new equilibrium">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C8A45C"/></marker></defs>
+        <path class="arr" d="M302 38 Q350 38 350 124"/>
+        <path class="arr" d="M350 176 Q350 262 302 262"/>
+        <path class="arr" d="M138 262 Q90 262 90 176"/>
+        <path class="arr" d="M90 124 Q90 38 138 38"/>
+        <rect class="bx" x="140" y="16" width="160" height="44"/>
+        <rect class="bx" x="270" y="128" width="160" height="44"/>
+        <rect class="bx hl" x="140" y="240" width="160" height="44"/>
+        <rect class="bx" x="10" y="128" width="160" height="44"/>
+        <text x="220" y="35" text-anchor="middle">Equilibrium</text>
+        <text x="220" y="51" text-anchor="middle" class="sub">a higher one each lap</text>
+        <text x="350" y="146" text-anchor="middle">New experience</text>
+        <text x="350" y="162" text-anchor="middle" class="sub">that doesn't quite fit</text>
+        <text x="220" y="267" text-anchor="middle" class="dk">Disequilibrium</text>
+        <text x="90" y="146" text-anchor="middle">Adaptation</text>
+        <text x="90" y="162" text-anchor="middle" class="sub">assimilate or accommodate</text>
+      </svg>
+      <div class="prose">
+        <p>On Piaget's account, development is driven largely by a mismatch between what a learner expects and what they encounter. Cognitive conflict can support learning, although instruction, practice, feedback, motivation and social interaction all contribute as well. This suggests that the practical question for design is which mismatch a particular learner is able to resolve.</p>
+        <p class="small">To test the terms, classify what happens to a toddler in each of three moments.</p>
+      </div>
+    </div>
+
+    <div class="panel" id="scBox" aria-live="polite"></div>
+
+    <div class="takeaway">
+      <h4>A note for designers</h4>
+      <p>If disequilibrium contributes to learning, then it is something a designer can shape. A tool that never surprises its learners gives them little to accommodate, while one that surprises them too often, or too much, may leave them unable to make sense of what they are seeing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ III. STAGES ============ -->
+<section class="sec" id="stages">
+  <div class="wrap">
+    <div class="sec-head"><h2>Four stages of thinking</h2></div>
+    <div class="prose">
+      <p>Piaget proposed that children's reasoning changes in kind as well as in amount, and that these changes occur in a fixed order (Piaget &amp; Inhelder, 1969). The colours below run from warm to cool, which loosely follows the movement from tactile to abstract thinking. Select a stage to see how Piaget described it.</p>
+    </div>
+    <div class="stairs" role="tablist" aria-label="Piaget's four stages" id="stairs"></div>
+    <div class="stage-detail" id="stageDetail" role="tabpanel" aria-live="polite"></div>
+    <p class="small" style="margin-top:1.4rem;max-width:40rem">The ages are rough averages. Children move between stages unevenly, and the same child may reason at different levels on different tasks, a point I return to in section V.</p>
+  </div>
+</section>
+
+<!-- ============ IV. ED TECH ============ -->
+<section class="sec alt" id="edtech">
+  <div class="wrap">
+    <div class="sec-head"><h2>Piaget in learning technology</h2></div>
+    <div class="prose">
+      <p>The connection between Piaget and learning technology runs largely through Seymour Papert, who worked with him in Geneva from 1958 to 1963. Papert later asked what computers might become for children if learning is understood as construction, and his answer has shaped a good part of the field.</p>
+    </div>
+    <ol class="line">
+      <li><b>1958–63</b>Papert works with Piaget in Geneva</li>
+      <li><b>1967</b>Logo, a language for children, is created</li>
+      <li><b>1980</b>Papert publishes <i>Mindstorms</i></li>
+      <li><b>1991</b>Papert and Harel name constructionism</li>
+      <li><b>2007</b>Scratch launches at MIT</li>
+    </ol>
+    <div class="prose">
+      <p>Constructionism retains Piaget's view that learners build their own knowledge, and adds the claim that this happens especially well when they are building something shareable in the world (Papert &amp; Harel, 1991). Block-based coding, maker spaces and a good deal of educational game design draw on this idea.</p>
+      <p>A further point comes from constructivist technology studies. Pinch and Bijker (1984) argue that a technology's design reflects the interpretations of the social groups involved in making and using it, along with whatever engineering principles apply. Applied to learning technology, this suggests that any tool carries assumptions about what learning is and who is doing it, whether or not its designers name a theory. Reading a tool through Piaget is one way of making those assumptions visible, and it is the approach I take with the three tools below.</p>
+      <h3>Three tools, read through a Piagetian lens</h3>
+      <p>For each tool I ask two questions. What does it assume about how learning works, and where does Piaget's theory stop being able to explain it?</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Case studies" id="caseTabs"></div>
+    <div class="case" id="casePanel" role="tabpanel" aria-live="polite"></div>
+
+    <h3>Five design principles that follow from this</h3>
+    <ul class="principles">
+      <li><b>Productive conflict.</b>Asking learners to predict before they see a result, and then showing them where the prediction failed, gives them a mismatch to work on. Novices usually need support in making sense of that conflict, so it should not be left to unguided discovery (Kirschner et al., 2006).</li>
+      <li><b>Action on objects.</b>Giving learners things to manipulate, whether physical or virtual, follows from Piaget's emphasis on action as a source of understanding.</li>
+      <li><b>Representation matched to readiness.</b>Tasks can begin with concrete representations and move gradually toward abstraction as understanding firms up.</li>
+      <li><b>Errors as information.</b>Piaget's clinical method asked children why they gave a particular answer. Feedback that exposes a learner's reasoning is therefore likely to be more useful than feedback that only marks an answer right or wrong.</li>
+      <li><b>The limits of individual construction.</b>Open exploration can be paired with social support, and the next section considers how the two fit together.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ V. CRITIQUE ============ -->
+<section class="sec" id="critique">
+  <div class="wrap">
+    <div class="sec-head"><h2>Where the theory strains</h2></div>
+    <div class="prose">
+      <p>Later research has tended to support Piaget's observations more than some of his explanations. Four criticisms seem especially relevant for anyone applying his work to the design of learning technologies.</p>
+    </div>
+    <div style="margin-top:1.6rem">
+      <details>
+        <summary>Infants may know more than Piaget credited</summary>
+        <div class="body"><p>Looking-time studies suggest that infants as young as five months react to physically impossible events, such as a solid object seeming to pass through another (Baillargeon et al., 1985). Researchers continue to debate what this reaction means, although many read it as early knowledge that Piaget's search tasks were unable to detect.</p></div>
+      </details>
+      <details>
+        <summary>Task design affects what children can show</summary>
+        <div class="body"><p>In one well-known study, children conserved more often when a "naughty teddy" disrupted the display accidentally than when an adult rearranged it deliberately (McGarrigle &amp; Donaldson, 1974). Donaldson (1978) used findings like this to argue that some apparent failures reflect how a task is worded and framed, and not an absence of the underlying logic. For designers, this means that instructions and context form part of the cognitive demand placed on a learner.</p></div>
+      </details>
+      <details>
+        <summary>The stages are less tidy than they appear</summary>
+        <div class="body"><p>Children often succeed on one task and fail a structurally similar one, an unevenness that Piaget called décalage. Later work also qualified the idea that formal operations are a universal, general endpoint, and Piaget (1972) himself suggested that they may appear mainly in fields where a person has expertise.</p></div>
+      </details>
+      <details>
+        <summary>The role of other people</summary>
+        <div class="body"><p>Piaget's account tends to picture the child as working largely alone, much like a scientist at a bench. Vygotsky (1978) argued instead that thinking develops through interaction with more capable others and through language. Of the four criticisms, this one has the most direct consequences for learning technology.</p></div>
+      </details>
+    </div>
+
+    <h3>Piaget and Vygotsky side by side</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th scope="col">Question</th><th scope="col">Piaget</th><th scope="col">Vygotsky</th></tr></thead>
+        <tbody>
+          <tr><td>What drives learning?</td><td>Mismatch between experience and existing schemas</td><td>Interaction with more capable others and cultural tools</td></tr>
+          <tr><td>Role of language</td><td>Reflects thinking that has already developed</td><td>Shapes thinking as it develops</td></tr>
+          <tr><td>Development and teaching</td><td>Readiness is a hypothesis about developmental constraints on what can be learned</td><td>Good teaching can pull development forward</td></tr>
+          <tr><td>Teacher's role</td><td>Arrange experiences, step back</td><td>Scaffold within the learner's zone of proximal development</td></tr>
+          <tr><td>Natural fit in ed tech</td><td>Simulations, building tools, microworlds</td><td>Collaborative platforms, tutoring, peer feedback</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="small" style="margin-top:1rem;max-width:42rem">This table is a simplification intended for teaching. Both theorists treat learners as active, and many current approaches draw on the two together.</p>
+
+    <h3>Using them together</h3>
+    <div class="prose">
+      <p>In practice the two can be treated as layers of a single design, and a physics simulation offers a convenient example.</p>
+    </div>
+    <div class="case" style="padding-top:.6rem">
+      <div>
+        <h4>The Piagetian layer</h4>
+        <ul>
+          <li>The learner predicts what will happen</li>
+          <li>They change the variables and watch the result</li>
+          <li>A wrong prediction creates the conflict</li>
+        </ul>
+      </div>
+      <div>
+        <h4>The Vygotskian layer</h4>
+        <ul>
+          <li>Prompts that ask them to explain the surprise</li>
+          <li>Worked examples for novices</li>
+          <li>Peer discussion of the result</li>
+          <li>Adaptive hints that fade as they improve, pitched just beyond what they can do alone</li>
+        </ul>
+      </div>
+    </div>
+    <div class="prose"><p>The Piagetian layer gives the learner something to work on, and the Vygotskian layer helps the learner make sense of the result. Kirschner et al. (2006) raise their concern about minimal guidance at this second point, since a novice who meets a prediction error without support may not know how to interpret it.</p></div>
+
+    <h3>A question to argue about</h3>
+    <div class="prose"><p>Is an AI tutor Piagetian, Vygotskian, or something else? Choose a position to read the case for it.</p></div>
+    <div class="toggle" role="group" aria-label="Positions on AI tutors" id="tgBtns"></div>
+    <div class="tg-out" id="tgOut" aria-live="polite">Choose a position above.</div>
+  </div>
+</section>
+
+<!-- ============ VI. CHECK ============ -->
+<section class="sec alt" id="check">
+  <div class="wrap">
+    <div class="sec-head"><h2>Check your understanding</h2></div>
+    <div class="quiz panel" id="quiz" aria-live="polite"></div>
+
+    <h3>Before you go</h3>
+    <div class="prose">
+      <p>Consider a learning tool that you use, teach with, or have designed. What does it assume about how people learn, and would Piaget, Vygotsky, or neither recognize those assumptions?</p>
+    </div>
+    <label class="lbl" for="notes">Your notes</label>
+    <textarea id="notes" placeholder="Write a few lines."></textarea>
+    <p class="small" style="margin-top:.6rem;max-width:42rem">This stays in your browser and is not saved or sent anywhere. Writers are encouraged to share their notes in the relevant discussion forum.</p>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <h2>References</h2>
+    <ul class="refs">
+      <li>Baillargeon, R., Spelke, E. S., &amp; Wasserman, S. (1985). Object permanence in five-month-old infants. <i>Cognition, 20</i>(3), 191–208.</li>
+      <li>Donaldson, M. (1978). <i>Children's minds</i>. Fontana.</li>
+      <li>Inhelder, B., &amp; Piaget, J. (1958). <i>The growth of logical thinking from childhood to adolescence</i>. Basic Books.</li>
+      <li>Kirschner, P. A., Sweller, J., &amp; Clark, R. E. (2006). Why minimal guidance during instruction does not work. <i>Educational Psychologist, 41</i>(2), 75–86.</li>
+      <li>McGarrigle, J., &amp; Donaldson, M. (1974). Conservation accidents. <i>Cognition, 3</i>(4), 341–350.</li>
+      <li>Papert, S. (1980). <i>Mindstorms: Children, computers, and powerful ideas</i>. Basic Books.</li>
+      <li>Papert, S., &amp; Harel, I. (1991). <i>Constructionism</i>. Ablex.</li>
+      <li>Piaget, J. (1952). <i>The origins of intelligence in children</i>. International Universities Press.</li>
+      <li>Piaget, J. (1954). <i>The construction of reality in the child</i>. Basic Books.</li>
+      <li>Piaget, J. (1972). Intellectual evolution from adolescence to adulthood. <i>Human Development, 15</i>(1), 1–12.</li>
+      <li>Piaget, J. (1973). <i>To understand is to invent: The future of education</i>. Grossman.</li>
+      <li>Piaget, J., &amp; Inhelder, B. (1969). <i>The psychology of the child</i>. Basic Books.</li>
+      <li>Pinch, T. J., &amp; Bijker, W. E. (1984). The social construction of facts and artefacts: Or how the sociology of science and the sociology of technology might benefit each other. <i>Social Studies of Science, 14</i>(3), 399–441.</li>
+      <li>Resnick, M., Maloney, J., Monroy-Hernández, A., et al. (2009). Scratch: Programming for all. <i>Communications of the ACM, 52</i>(11), 60–67.</li>
+      <li>Vygotsky, L. S. (1978). <i>Mind in society</i>. Harvard University Press.</li>
+      <li>Wieman, C. E., Adams, W. K., &amp; Perkins, K. K. (2008). PhET: Simulations that enhance learning. <i>Science, 322</i>(5902), 682–683.</li>
+    </ul>
+    <h3>About this site</h3>
+    <p>Created by Laila Kasim-Parkinson for ETEC 512, UBC. Drafted with help from an AI assistant (Claude, by Anthropic), then reviewed and edited by the author, who checked the claims and citations against the original sources.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Hero: stages build once on load ---------- */
+var steps=$('#heroSteps');
+setTimeout(function(){steps.classList.add('built')}, reduce?0:300);
+
+/* ---------- Navigation: active, seen, progress ---------- */
+var links=$$('.rail ol a');
+var secs=links.map(function(a){return $(a.getAttribute('href'))});
+var so=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(!e.isIntersecting)return;
+    var idx=secs.indexOf(e.target);
+    links.forEach(function(l,i){
+      l.classList.toggle('active',i===idx);
+      if(i<idx)l.classList.add('seen');
+    });
+  });
+},{rootMargin:'-35% 0px -60% 0px'});
+secs.forEach(function(s){if(s)so.observe(s)});
+var bar=$('.progress');
+function onScroll(){
+  var h=document.documentElement;
+  var max=h.scrollHeight-h.clientHeight;
+  var p=max>0?h.scrollTop/max:0;
+  bar.style.width=(Math.min(1,Math.max(0,p))*100)+'%';
+}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+/* ---------- Section I: conservation lab ---------- */
+var panel=$('#labPanel');
+var wA=$('#wA'),wB=$('#wB'),wC=$('#wC');
+var WIDE=80,TALL=164; /* equal volumes: 82px x 80px = 40px x 164px */
+function setWater(a,b,c){wA.style.height=a+'px';wB.style.height=b+'px';wC.style.height=c+'px'}
+
+function labStart(){
+  setWater(WIDE,WIDE,0);
+  panel.innerHTML=
+   '<p class="step">Step 1 of 3</p>'+
+   '<h4>Two equal glasses</h4>'+
+   '<p>Glasses A and B hold exactly the same amount of juice. Glass C is tall, narrow and empty. The experimenter pours all of B into C.</p>'+
+   '<div class="btns"><button class="btn dark" id="pourBtn" type="button">Pour B into C</button></div>';
+  $('#pourBtn').addEventListener('click',function(){
+    this.disabled=true;
+    setWater(WIDE,0,TALL);
+    setTimeout(labPredict,reduce?100:2100);
+  });
+}
+
+function labPredict(){
+  panel.innerHTML=
+   '<p class="step">Step 2 of 3</p>'+
+   '<h4>What might a five-year-old say?</h4>'+
+   '<p>The child is asked: "Does A have more juice, does C have more, or is it the same?"</p>'+
+   '<div class="opts" id="labOpts">'+
+     '<button class="opt" type="button" data-v="same">They are the same</button>'+
+     '<button class="opt" type="button" data-v="tall">C has more, because it is taller</button>'+
+     '<button class="opt" type="button" data-v="wide">A has more, because it is wider</button>'+
+   '</div><div id="labFb"></div>';
+  $$('#labOpts .opt').forEach(function(b){b.addEventListener('click',function(){labReveal(b.dataset.v)})});
+}
+
+function labReveal(v){
+  var msgs={
+    tall:'<b>A reasonable prediction.</b> Many children in the preoperational period answer this way, judging by height and overlooking width.',
+    same:'<b>That is the adult answer, and it is the correct one.</b> Many five-year-olds nonetheless say that C has more. The child knows perfectly well what juice is, but their reasoning tends to settle on a single visible feature, in this case height.',
+    wide:'<b>Possible, though less common.</b> Some children do focus on width. In either case the child attends to one dimension at a time, which Piaget called centration.'
+  };
+  $$('#labOpts .opt').forEach(function(b){
+    b.disabled=true;
+    if(b.dataset.v==='tall')b.classList.add('is-right');
+    else if(b.dataset.v===v)b.classList.add('is-wrong');
+  });
+  $('#labFb').innerHTML='<p class="fb">'+msgs[v]+'</p><p class="small">Ages here are approximate. How many children succeed depends on the design of the task, its wording, and children\'s culture and experience, a point taken up in section V.</p><div class="btns"><button class="btn dark" id="nineBtn" type="button">Now ask a nine-year-old</button></div>';
+  $('#nineBtn').addEventListener('click',labNine);
+}
+
+function labNine(){
+  panel.innerHTML=
+   '<p class="step">Step 3 of 3</p>'+
+   '<h4>A nine-year-old says "the same"</h4>'+
+   '<p>Older children can usually explain why, and Piaget identified three kinds of justification:</p>'+
+   '<ul class="reasons">'+
+     '<li><b>Identity.</b> "You didn\'t add or take away any juice."</li>'+
+     '<li><b>Reversibility.</b> "If you poured it back, it would look the same as before."</li>'+
+     '<li><b>Compensation.</b> "It\'s taller, but it\'s also thinner."</li>'+
+   '</ul>'+
+   '<p>Each justification relies on a logical operation that the younger child has not yet coordinated. You can try reversibility below.</p>'+
+   '<div class="btns"><button class="btn dark" id="backBtn" type="button">Pour C back into B</button><button class="btn line" id="againBtn" type="button">Start again</button></div>'+
+   '<p class="fb" id="backNote"></p>';
+  $('#backBtn').addEventListener('click',function(){
+    setWater(WIDE,WIDE,0);
+    $('#backNote').innerHTML='B is full again and matches A. For the older child this reversal can be carried out mentally as well as physically, and being able to do so supports the judgment that the amount has stayed the same.';
+  });
+  $('#againBtn').addEventListener('click',labStart);
+}
+labStart();
+
+/* ---------- Section II: classify the process ---------- */
+var scen=[
+ {t:'A toddler\'s "bird" schema is: small, feathered, flies. At the park she sees a sparrow she has never met and says, "Bird!"',a:'Assimilation',e:'The sparrow fits the schema she already has, so she takes it in without changing anything.'},
+ {t:'Later she meets a penguin. It has feathers but swims and cannot fly. Her dad says, "That\'s a bird too." She now counts flightless animals as birds.',a:'Accommodation',e:'Her schema has to change in order to include something it could not previously hold.'},
+ {t:'She points at a bat: "Bird!" Her dad says it isn\'t one. It flies, so she cannot yet see why it does not count. She frowns, puzzled.',a:'Disequilibrium',e:'This is a state of disequilibrium: her existing schema cannot account for the bat, and she is aware of the gap. Resolving it will require an accommodation, and it is this gap that Piaget saw as driving learning.'}
+];
+var si=0;
+var scBox=$('#scBox');
+function renderScenario(){
+  var s=scen[si];
+  scBox.innerHTML=
+   '<p class="step">Moment '+(si+1)+' of '+scen.length+'</p>'+
+   '<p>'+s.t+'</p>'+
+   '<div class="opts" id="scOpts">'+
+     ['Assimilation','Accommodation','Disequilibrium'].map(function(o){return '<button class="opt" type="button" data-o="'+o+'">'+o+'</button>'}).join('')+
+   '</div><div id="scFb"></div>';
+  $$('#scOpts .opt').forEach(function(b){
+    b.addEventListener('click',function(){
+      var ok=b.dataset.o===s.a;
+      $$('#scOpts .opt').forEach(function(x){
+        x.disabled=true;
+        if(x.dataset.o===s.a)x.classList.add('is-right');
+      });
+      if(!ok)b.classList.add('is-wrong');
+      var next=si<scen.length-1
+        ? '<div class="btns"><button class="btn dark" id="scNext" type="button">Next moment</button></div>'
+        : '<div class="btns"><button class="btn line" id="scNext" type="button">Go through them again</button></div>';
+      $('#scFb').innerHTML='<p class="fb"><b>'+(ok?'Correct.':'Not quite. It is '+s.a.toLowerCase()+'.')+'</b> '+s.e+'</p>'+next;
+      $('#scNext').addEventListener('click',function(){si=(si+1)%scen.length;renderScenario()});
+    });
+  });
+}
+renderScenario();
+
+/* ---------- Section III: stage explorer ---------- */
+var stages=[
+ {name:'Sensorimotor',age:'0–2',c:'var(--brass)',
+  how:'Infants know the world by acting on it: sucking, grasping, shaking, dropping. Reflexes give way to deliberate, goal-directed action, and finally to mental representation.',
+  see:['Repeating an action because its effect is interesting','Object permanence appears: out of sight stops meaning gone','Means–ends behaviour, such as pulling a cloth to reach a toy'],
+  task:'The A-not-B task. A toy is hidden at location A several times, then hidden at B in plain view. Infants around 8 to 12 months often keep searching at A (Piaget, 1954).',
+  lens:'Interfaces for this age would centre on immediate cause and effect, in which touch, sound and motion respond to the child\'s own action. Whether screens belong in this period at all is a separate and unsettled debate.'},
+ {name:'Preoperational',age:'2–7',c:'var(--claret)',
+  how:'Children can now represent the world with words, images and pretend play. Thinking still follows appearances and has not yet become logic that can be reversed or combined.',
+  see:['Symbolic play: a box becomes a boat','Egocentrism: difficulty seeing from another person\'s position','Centration: focusing on one feature and ignoring the rest','Conservation not yet secure, as in Section I'],
+  task:'The conservation task from the puzzle above, or the three mountains task, where a child says what a doll on the other side of a model landscape can see.',
+  lens:'Expressive, symbolic tools seem to suit this stage, including drawing, storytelling, voice recording, and early coding environments such as ScratchJr (aimed at ages 5 to 7). Tasks with few, visual steps would be preferable to those that require several variables to be held in mind at once.'},
+ {name:'Concrete operational',age:'7–11',c:'var(--teal)',
+  how:'Logical operations arrive, but they work on things that are tangible or easy to picture. Children can reverse, classify and order mentally, yet struggle with purely hypothetical problems.',
+  see:['Conservation: appearance changes, quantity does not','Reversibility and compensation','Classification and seriation (ordering by size)','Class inclusion: more flowers than roses'],
+  task:'Seriation. Ordering sticks from shortest to longest. Younger children make partial pairs, while concrete thinkers build the whole ladder.',
+  lens:'Manipulable representations, such as block-based coding, virtual manipulatives, and drag-and-drop sorting or graphing, would seem to fit here. The underlying idea is that abstractions are easier to grasp when they are anchored in something a child can handle, or can at least imagine handling.'},
+ {name:'Formal operational',age:'12+',c:'var(--bone)',
+  how:'Thought detaches from the concrete. Adolescents can reason about possibilities, propositions and hypotheses, and can test factors systematically.',
+  see:['Hypothetical-deductive reasoning: "if this, then that"','Controlling variables one at a time','Reasoning about abstractions such as proportion and probability','Considering all combinations of factors'],
+  task:'The pendulum problem. What controls how fast a pendulum swings: its length, its weight, the height of release or the strength of the push? Formal thinkers vary one factor at a time (Inhelder &amp; Piaget, 1958).',
+  lens:'Simulations with adjustable variables, data modelling, and hypothesis-testing environments would fit this period. Piaget (1972) qualified the idea that formal operations are a universal endpoint, suggesting that they may appear mainly in areas of expertise, which means that scaffolding remains important.'}
+];
+var stairs=$('#stairs'),sd=$('#stageDetail');
+stairs.innerHTML=stages.map(function(s,i){
+  return '<button class="stair" role="tab" type="button" data-i="'+i+'" aria-selected="'+(i===0)+'" tabindex="'+(i===0?0:-1)+'"><b>'+s.name+'</b><span>Ages '+s.age+'</span></button>';
+}).join('');
+function showStage(i,focus){
+  var s=stages[i];
+  $$('.stair',stairs).forEach(function(b,j){
+    b.setAttribute('aria-selected',j===i);
+    b.tabIndex=j===i?0:-1;
+    if(j===i&&focus)b.focus();
+  });
+  sd.style.setProperty('--c',s.c);
+  sd.innerHTML=
+   '<div><div class="age">'+s.age+'</div><div class="nm">'+s.name+'</div></div>'+
+   '<div>'+
+     '<h4>How thinking works</h4><p>'+s.how+'</p>'+
+     '<h4>What you can observe</h4><ul>'+s.see.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'+
+     '<h4>A classic task</h4><p>'+s.task+'</p>'+
+     '<h4>What it suggests for design</h4><p>'+s.lens+'</p>'+
+   '</div>';
+}
+stairs.addEventListener('click',function(e){var b=e.target.closest('.stair');if(b)showStage(+b.dataset.i)});
+stairs.addEventListener('keydown',function(e){
+  var cur=+$('.stair[aria-selected="true"]',stairs).dataset.i,n=cur;
+  if(e.key==='ArrowRight')n=(cur+1)%4;
+  else if(e.key==='ArrowLeft')n=(cur+3)%4;
+  else if(e.key==='Home')n=0;
+  else if(e.key==='End')n=3;
+  else return;
+  e.preventDefault();showStage(n,true);
+});
+showStage(0);
+
+/* ---------- Section IV: case studies ---------- */
+var cases=[
+ {name:'Scratch',
+  what:'A block-based programming environment from the MIT Media Lab, launched in 2007, where learners make interactive stories, games and animations (Resnick et al., 2009).',
+  bets:['Learning by constructing something real','Blocks and sprites turn abstract programming into objects to think with','Debugging is a built-in source of productive conflict'],
+  short:['Much of its value lies in the online community and in remixing, which are social practices and sit closer to Vygotsky than to Piaget','Fully open-ended projects can leave novices without a way forward unless a prompt or a peer is available'],
+  q:'At what point does productive struggle turn into disengagement?'},
+ {name:'PhET simulations',
+  what:'Interactive science and math simulations from the University of Colorado Boulder, where learners change variables and watch the consequences immediately (Wieman et al., 2008).',
+  bets:['Asking learners to predict before they observe invites cognitive conflict','Direct manipulation lets learners act on a model','Changing one variable at a time gives practice in the reasoning Piaget associated with formal operations'],
+  short:['Unguided discovery can be inefficient for novices, and Kirschner et al. (2006) argue that minimal guidance often works poorly','Teachers often pair simulations with structured questions and discussion, which adds the social dimension that Piaget\'s account gives little attention'],
+  q:'How much guidance is needed for the conflict to remain productive?'},
+ {name:'Adaptive practice platforms',
+  what:'Systems that adjust the difficulty and order of problems based on each learner\'s performance data. This describes a category of tool, and no single product.',
+  bets:['Keeping tasks close to a learner\'s current understanding keeps mismatches manageable, which echoes the idea of equilibration','Each learner follows a different route'],
+  short:['Because the system decides which conflict a learner meets, the learner has limited opportunity to construct anything','Learners answer questions rather than act on objects','Right-or-wrong data can miss the reasoning behind an answer, which Piaget\'s clinical method was designed to uncover','Matching tasks to the learner\'s level is arguably closer to Vygotsky\'s zone of proximal development than to Piaget'],
+  q:'Is the learner constructing anything, or following a path that someone else has laid down?'}
+];
+var ct=$('#caseTabs'),cp=$('#casePanel');
+ct.innerHTML=cases.map(function(c,i){return '<button class="tab" role="tab" type="button" data-i="'+i+'" aria-selected="'+(i===0)+'" tabindex="'+(i===0?0:-1)+'">'+c.name+'</button>'}).join('');
+function showCase(i,focus){
+  var c=cases[i];
+  $$('.tab',ct).forEach(function(b,j){b.setAttribute('aria-selected',j===i);b.tabIndex=j===i?0:-1;if(j===i&&focus)b.focus()});
+  var li=function(a){return '<ul>'+a.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'};
+  cp.innerHTML=
+   '<div><h4>What it is</h4><p>'+c.what+'</p><h4>The Piagetian assumptions</h4>'+li(c.bets)+'</div>'+
+   '<div><h4>Where the theory falls short</h4>'+li(c.short)+'<h4>A question to ask</h4><p>'+c.q+'</p></div>';
+}
+ct.addEventListener('click',function(e){var b=e.target.closest('.tab');if(b)showCase(+b.dataset.i)});
+ct.addEventListener('keydown',function(e){
+  var n=cases.length,cur=+$('.tab[aria-selected="true"]',ct).dataset.i,nx=cur;
+  if(e.key==='ArrowRight')nx=(cur+1)%n;
+  else if(e.key==='ArrowLeft')nx=(cur+n-1)%n;
+  else return;
+  e.preventDefault();showCase(nx,true);
+});
+showCase(0);
+
+/* ---------- Section V: AI tutor positions ---------- */
+var pos=[
+ {n:'Piagetian',t:'<b>The case.</b> A learner can test an idea against the tutor\'s response and revise it, so that the conversation becomes something to think with. An unexpected answer may create the kind of conflict Piaget thought productive. This holds provided the learner is the one doing the thinking.'},
+ {n:'Vygotskian',t:'<b>The case.</b> The tutor takes the role of a more knowledgeable other, using language to support the learner just beyond what they could manage alone and handing control back as they improve. Dialogue is the main mechanism.'},
+ {n:'It depends on the design',t:'<b>The case.</b> A tutor that supplies finished answers gives the learner little to construct and no conflict to resolve. Neither theory would count this as learning, even when the answers are correct, so the design choices may matter more than the label.'}
+];
+var tb=$('#tgBtns'),tout=$('#tgOut');
+tb.innerHTML=pos.map(function(p,i){return '<button class="tg" type="button" data-i="'+i+'" aria-pressed="false">'+p.n+'</button>'}).join('');
+tb.addEventListener('click',function(e){
+  var b=e.target.closest('.tg');if(!b)return;
+  $$('.tg',tb).forEach(function(x){x.setAttribute('aria-pressed',x===b)});
+  tout.innerHTML=pos[+b.dataset.i].t;
+});
+
+/* ---------- Section VI: quiz ---------- */
+var qs=[
+ {q:'A six-year-old insists the tall, thin glass holds more juice than the short, wide one. Which ability does Piaget say is missing?',o:['Object permanence','Conservation','Hypothetical-deductive reasoning','Seriation'],a:1,e:'Conservation is the understanding that quantity stays the same when appearance changes. It typically develops in the concrete operational stage.'},
+ {q:'According to Piaget, what mainly drives cognitive development?',o:['Reinforcement of correct answers','Resolving disequilibrium through adaptation','Absorbing information from teachers','Biological maturation alone'],a:1,e:'Mismatch between experience and existing schemas creates disequilibrium. Assimilating or accommodating resolves it and moves thinking forward.'},
+ {q:'Which feature of a learning tool is most consistent with Piagetian constructivism?',o:['A video lecture followed by an automatic quiz','Badges awarded for daily practice streaks','A simulation where learners predict, adjust variables, then compare','Pop-up hints that reveal the answer immediately'],a:2,e:'Predicting, acting on a model and comparing against the result makes the learner do the constructing, and it invites productive conflict.'},
+ {q:'Papert\'s constructionism extended Piaget by emphasizing that:',o:['Computers let children skip developmental stages','Learning is especially effective when learners build shareable artifacts','Drill and practice is the best route to mastery','Teachers should do most of the explaining'],a:1,e:'Constructionism keeps the idea that learners construct knowledge, and adds that building something meaningful and public makes the learning stronger.'},
+ {q:'Which is a well-supported criticism of Piaget\'s account?',o:['Infants show signs of object knowledge earlier than he proposed','Children skip the sensorimotor stage entirely','Stage order is reversed in non-Western cultures','He overstated the role of social interaction'],a:0,e:'Looking-time research suggests early expectations about objects. The other options are not supported by the research, and critics have in fact argued that Piaget gave too little weight to social interaction.'}
+];
+var qi=0,score=0,qBox=$('#quiz');
+function renderQ(){
+  if(qi>=qs.length){
+    var msg=score===qs.length?'Full marks.':score>=3?'A solid grasp. You may want to reread the sections behind any questions you missed.':'It may be worth another pass through sections II and III.';
+    qBox.innerHTML='<p class="step">Finished</p><div class="score">'+score+' of '+qs.length+'</div><p>'+msg+'</p><div class="btns"><button class="btn dark" id="qAgain" type="button">Try again</button></div>';
+    $('#qAgain').addEventListener('click',function(){qi=0;score=0;renderQ()});
+    return;
+  }
+  var q=qs[qi];
+  qBox.innerHTML=
+   '<p class="step">Question '+(qi+1)+' of '+qs.length+'</p>'+
+   '<h4>'+q.q+'</h4>'+
+   '<div class="opts" id="qOpts">'+q.o.map(function(t,i){return '<button class="opt" type="button" data-i="'+i+'">'+t+'</button>'}).join('')+'</div>'+
+   '<div id="qFb"></div>';
+  $$('#qOpts .opt').forEach(function(b){
+    b.addEventListener('click',function(){
+      var pick=+b.dataset.i,ok=pick===q.a;
+      if(ok)score++;
+      $$('#qOpts .opt').forEach(function(x){
+        x.disabled=true;
+        if(+x.dataset.i===q.a)x.classList.add('is-right');
+      });
+      if(!ok)b.classList.add('is-wrong');
+      $('#qFb').innerHTML='<p class="fb"><b>'+(ok?'Correct.':'Not quite.')+'</b> '+q.e+'</p><div class="btns"><button class="btn dark" id="qNext" type="button">'+(qi===qs.length-1?'See my score':'Next question')+'</button></div>';
+      $('#qNext').addEventListener('click',function(){qi++;renderQ()});
+    });
+  });
+}
+renderQ();
+})();
+</script>
+</body>
+</html>
